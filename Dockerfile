@@ -15,7 +15,7 @@ RUN set -xe \
     && echo 'pl_PL ISO-8859-2' >> /etc/locale.gen \
     && echo 'pl_PL.UTF-8 UTF-8' >> /etc/locale.gen \
     && locale-gen en_US en_US.UTF-8 pl_PL pl_PL.UTF-8 \
-    && dpkg-reconfigure -f noninteractive locales
+    && dpkg-reconfigure -f noninteractive locales \
     && ln -sf /usr/share/zoneinfo/Poland /etc/localtime
 
 RUN set -xe \
