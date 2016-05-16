@@ -2,21 +2,24 @@ FROM php:7.0.6-fpm
 
 MAINTAINER Varya <contact@varya.pro>
 
+ENV TZ Europe/Warsaw
+ENV LANG pl_PL.UTF-8
+ENV LANGUAGE pl_PL:pl
+ENV LC_ALL pl_PL.UTF-8
+
 # Configure timezone and locale
 RUN set -xe \
     && apt-get update \
     && apt-get install --no-install-recommends -y locales \
     && rm -rf /var/lib/apt/lists/*
-ENV LANG pl_PL.UTF-8
-ENV LANGUAGE pl_PL:pl
-ENV LC_ALL pl_PL.UTF-8
+
 RUN set -xe \
-    && echo 'Europe/Warsaw' > /etc/timezone; dpkg-reconfigure -f noninteractive tzdata \
-    && echo 'pl_PL ISO-8859-2' >> /etc/locale.gen \
-    && echo 'pl_PL.UTF-8 UTF-8' >> /etc/locale.gen \
-    && locale-gen en_US en_US.UTF-8 pl_PL pl_PL.UTF-8 \
+    && echo $TZ > /etc/timezone; dpkg-reconfigure -f noninteractive tzdata \
+    && sed -i "s/^#\s*\($LANG.*$\)/\1/g" /etc/locale.gen \
+    && locale-gen en_US en_US.UTF-8 $LANG \
     && dpkg-reconfigure -f noninteractive locales \
-    && ln -sf /usr/share/zoneinfo/Poland /etc/localtime
+    && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo "date.timezone = '$TZ'" > /usr/local/etc/php/conf.d/timezone.ini
 
 RUN set -xe \
     && apt-get update \
@@ -83,6 +86,8 @@ RUN set -xe \
 # composer.phar
 ADD https://getcomposer.org/composer.phar /usr/local/bin/composer
 RUN chmod a+xr /usr/local/bin/composer
+
+ADD etc/php/conf.d/* /usr/local/etc/php/conf.d/
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
