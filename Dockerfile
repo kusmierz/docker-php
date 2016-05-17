@@ -19,7 +19,7 @@ RUN set -xe \
     && locale-gen en_US en_US.UTF-8 $LANG \
     && dpkg-reconfigure -f noninteractive locales \
     && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
-    && echo -e "date.timezone = '$TZ'\nintl.default_locale = '$LANG'" > /usr/local/etc/php/conf.d/timezone.ini
+    && echo "date.timezone = '$TZ'\nintl.default_locale = '$LANG'" > /usr/local/etc/php/conf.d/timezone.ini
 
 RUN set -xe \
     && apt-get update \
