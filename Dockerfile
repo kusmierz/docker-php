@@ -19,7 +19,7 @@ RUN set -xe \
     && locale-gen en_US en_US.UTF-8 $LANG \
     && dpkg-reconfigure -f noninteractive locales \
     && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
-    && echo "date.timezone = '$TZ'" > /usr/local/etc/php/conf.d/timezone.ini
+    && echo -e "date.timezone = '$TZ'\nintl.default_locale = '$LANG'" > /usr/local/etc/php/conf.d/timezone.ini
 
 RUN set -xe \
     && apt-get update \
@@ -38,7 +38,7 @@ RUN set -xe \
         python \
     && ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
     # Common php extensions
-    && docker-php-ext-install opcache mcrypt mbstring gettext intl iconv gmp \
+    && docker-php-ext-install opcache mcrypt mbstring gettext intl iconv gmp soap \
     && docker-php-ext-configure gd -with-freetype-dir=/usr/include/ -with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
     && apt-get purge --auto-remove -y \
