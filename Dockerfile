@@ -34,6 +34,8 @@ RUN set -xe \
         libjpeg-dev \
         libpng-dev \
         libgmp-dev \
+        libcurl3-dev \
+        libxml2-dev \
         libfreetype6-dev \
         python \
     && ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
